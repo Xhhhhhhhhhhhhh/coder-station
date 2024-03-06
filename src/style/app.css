@@ -1,0 +1,60 @@
+.headMenu {
+    display: flex;
+    width: 100%;
+    background-color: #001529;;
+    padding: 0 20px;
+    column-gap: 10px;
+    height: 64px;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.menu {
+    flex: 0.1 0 auto;
+}
+
+.title {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+
+}
+
+.title span:first-child {
+    color: #458ef7;
+}
+
+.select {
+    width: 480px;
+    display: flex;
+    align-items: center;
+}
+
+
+.select .ant-input-group-addon {
+    background-color: #fff;
+}
+
+.footer {
+    width: 100vw;
+    /* outline: 1px solid red; */
+}
+
+.footer p {
+    text-align: center;
+    color: rgb(102, 102, 102);
+    margin: 0 auto;
+}
+
+.footer .links {
+    width: 500px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.footer .linkItem {
+    margin-right: 10px;
+}
