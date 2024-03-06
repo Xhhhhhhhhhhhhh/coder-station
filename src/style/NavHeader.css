@@ -1,0 +1,6 @@
+.model-form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    row-gap: 20px;
+}

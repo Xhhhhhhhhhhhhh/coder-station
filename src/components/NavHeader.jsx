@@ -1,7 +1,10 @@
-import { Button, Input, Menu, Select } from "antd";
+import { Button, Input, Menu, Select, Segmented } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Model from "../components/Model";
+import { login } from "../api/userApi";
+import LoginFrom from "./LoginFrom";
+import '../style/NavHeader.css'
 
 
 const { Option } = Select;
@@ -43,8 +46,15 @@ function NavHeader(props) {
     const location = useLocation();
     const [current, setCurrent] = useState('');
     const [controller, setController] = useState(false)
-
-
+    const [userInfo, setUserInfo] = useState({
+        loginId: '',
+        loginPwd: '',
+        remember: '',
+        captcha: '',
+        nickname: ''
+    });
+    const [modelMap, setModelMap] = useState('登录');
+    const [isSubmit, setIsSubmit] = useState(false);
     useEffect(() => { // 监听location 实时改变选中样式
         setCurrent(location.pathname.replaceAll('/', ''));
     }, [location])
@@ -57,9 +67,7 @@ function NavHeader(props) {
     const handleRL = () => {
         setController(!controller);
     }
-    const test = () => {
-        return new Promise((resolve, reject) => setTimeout(() => resolve('ces'), 1000))
-    }
+
     return (
         <>
             <div className='headMenu'>
@@ -89,19 +97,25 @@ function NavHeader(props) {
                     />
                 </div>
                 <Model
-                    handel={
+                    handel={() => (
                         <Button
                             type="primary"
                             onClick={handleRL}
                         >
                             注册/登录
                         </Button>
+                        )
                     }
                     controller={controller}
                     cancel={handleRL}
-                    submitFunc={() => test()}
+                    submitFunc={() => login(userInfo)}
+                    isSubmit={isSubmit}
                 >
-                    1221
+                    <div className='model-form'>
+                        {/* 这个组件的事件参数是直接返回value */}
+                        <Segmented options={['登录', '注册']} block value={modelMap} onChange={setModelMap} size='large' />
+                        <LoginFrom setIsSubmit={setIsSubmit} />
+                    </div>
                 </Model>
             </div>
         </>

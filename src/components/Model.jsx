@@ -18,7 +18,7 @@ function Model(props) {
             description
         })
     }
-    const { controller, cancel, submitFunc } = props;
+    const { controller, cancel, submitFunc, isSubmit } = props;
     const [ loading, setLoading ] = useState(false);
     const handleSubmit = () => {
         setLoading(true);
@@ -27,14 +27,14 @@ function Model(props) {
             openMessage('success', '提交成功', '');
             cancel();
         }).catch(error => {
-            openMessage('error', '请求出错，请稍后再试', error);
+            openMessage('error', '请求出错，请稍后再试', error.data.msg);
             setLoading(false);
         });
     }
     return (
         <>
             {contextHolder}
-            { props.handel }
+            { props.handel() }
             <Modal
                 title="注册/登录"
                 open={controller}
@@ -43,6 +43,9 @@ function Model(props) {
                 onOk={ handleSubmit }
                 okText='提交'
                 cancelText='取消'
+                okButtonProps={{
+                    disabled: !isSubmit
+                }}
             >
                 { props.children }
             </Modal>
