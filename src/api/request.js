@@ -11,8 +11,15 @@ request.interceptors.request.use(config => {
 })
 
 request.interceptors.response.use(resp => {
-    console.log(resp.data);
-    return resp.data.code === 200 ? Promise.resolve(resp.data) : Promise.reject(resp);
+    if (resp.data.code){
+        return resp.data.code === 200 ? Promise.resolve(resp.data) : Promise.reject(resp);
+    } else {
+        /*
+        * 防止接口没有返回code接口 导致报错
+        * */
+        return Promise.resolve(resp.data)
+    }
+
 }, error => {
     return Promise.reject(error);
 })

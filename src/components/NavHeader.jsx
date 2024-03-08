@@ -2,10 +2,9 @@ import { Button, Input, Menu, Select, Segmented } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Model from "../components/Model";
-import { login } from "../api/userApi";
 import LoginFrom from "./LoginFrom";
 import '../style/NavHeader.css'
-
+import { getCaptcha } from "../api/otherApi";
 
 const { Option } = Select;
 const { Search } = Input;
@@ -46,15 +45,9 @@ function NavHeader(props) {
     const location = useLocation();
     const [current, setCurrent] = useState('');
     const [controller, setController] = useState(false)
-    const [userInfo, setUserInfo] = useState({
-        loginId: '',
-        loginPwd: '',
-        remember: '',
-        captcha: '',
-        nickname: ''
-    });
     const [modelMap, setModelMap] = useState('登录');
-    const [isSubmit, setIsSubmit] = useState(false);
+    const [captchaSvg, setCaptchaSvg] = useState('');
+
     useEffect(() => { // 监听location 实时改变选中样式
         setCurrent(location.pathname.replaceAll('/', ''));
     }, [location])
@@ -64,10 +57,15 @@ function NavHeader(props) {
         setCurrent(e.key);
     }
 
-    const handleRL = () => {
+    const handleRL = () => { // 切换弹窗状态
         setController(!controller);
+        captcha();
     }
-
+   const captcha = () => {
+       getCaptcha().then(resp => {
+           setCaptchaSvg(resp);
+       })
+   }
     return (
         <>
             <div className='headMenu'>
@@ -108,13 +106,16 @@ function NavHeader(props) {
                     }
                     controller={controller}
                     cancel={handleRL}
-                    submitFunc={() => login(userInfo)}
-                    isSubmit={isSubmit}
                 >
                     <div className='model-form'>
                         {/* 这个组件的事件参数是直接返回value */}
-                        <Segmented options={['登录', '注册']} block value={modelMap} onChange={setModelMap} size='large' />
-                        <LoginFrom setIsSubmit={setIsSubmit} />
+                        <Segmented options={ ['登录', '注册'] } block value={ modelMap } onChange={ setModelMap } size='large' />
+                        <LoginFrom
+                            captchaSvg={ captchaSvg }
+                            changeCaptchaSvg={ captcha }
+                            handleRL={handleRL}
+                            isLogin={modelMap === '登录'}
+                        />
                     </div>
                 </Model>
             </div>

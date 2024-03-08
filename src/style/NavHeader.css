@@ -4,3 +4,7 @@
     flex-direction: column;
     row-gap: 20px;
 }
+
+.captcha-svg svg {
+    height: 40px;
+}

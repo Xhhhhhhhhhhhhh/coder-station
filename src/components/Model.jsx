@@ -10,6 +10,8 @@ import { useState } from "react";
 * submitFunc: 返回promise的函数
 *
 * */
+
+
 function Model(props) {
     const [api, contextHolder] = notification.useNotification();
     const openMessage = (type, message, description) => {
@@ -25,7 +27,6 @@ function Model(props) {
         submitFunc().then(resp => {
             setLoading(false);
             openMessage('success', '提交成功', '');
-            cancel();
         }).catch(error => {
             openMessage('error', '请求出错，请稍后再试', error.data.msg);
             setLoading(false);
@@ -46,6 +47,7 @@ function Model(props) {
                 okButtonProps={{
                     disabled: !isSubmit
                 }}
+                footer={null}
             >
                 { props.children }
             </Modal>

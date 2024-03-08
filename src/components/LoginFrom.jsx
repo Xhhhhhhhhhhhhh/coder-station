@@ -1,28 +1,42 @@
-import { Input, Form, Checkbox, Button } from "antd";
-import { useEffect, useState } from "react";
-import { debounce } from '../util'
+import { Input, Form, Checkbox, Button, Row, Col } from "antd";
+import { useState } from "react";
+import { submitAutoMessage } from '../util'
+import { useImmer } from "use-immer";
+import { login, register } from "../api/userApi";
+import { useDispatch } from "react-redux";
+import { setInfo, setIsLogin } from "../store/userInfo";
 
 function LoginFrom(props) {
-    const { setIsSubmit } = props;
-    const [userInfo, setUserInfo] = useState({
+    const { captchaSvg, changeCaptchaSvg, handleRL, isLogin } = props;
+    const [form] = Form.useForm();
+    const [userInfo, setUserInfo] = useImmer({
         loginId: '',
         loginPwd: '',
-        remember: '',
+        remember: 7,
         captcha: '',
         nickname: ''
     });
-    const [form] = Form.useForm();
-    const validate = () => {
-        form.validateFields({
-            validateOnly: true
-        }).then(() => setIsSubmit(true)).catch(() => setIsSubmit(false));
+    const [isSubmit, setIsSubmit] = useState(false);
+    const dispatch = useDispatch();
+    const handleChangeInput = (key, payload) => {
+        setUserInfo(draft => {
+            draft[key] = payload
+        });
     }
 
-    useEffect(() => {
-        validate();
-    }, []);
-    const handleChange = () => {
-        validate();
+    const handleSubmit = () => {
+        const {loginId, nickname} = userInfo
+        submitAutoMessage(
+            isLogin ? login.bind(null, userInfo) : register.bind(null, userInfo) ,
+            setIsSubmit,
+            isLogin ? '登录成功' : '注册成功',
+            null,
+            () => {
+                dispatch(setInfo({loginId, nickname}));
+                dispatch(setIsLogin(true));
+                handleRL();
+            },
+            changeCaptchaSvg);
     }
     return (
         <>
@@ -31,13 +45,16 @@ function LoginFrom(props) {
                 initialValues={{
                     remember: true,
                 }}
+                labelCol={{span:4}}
                 form={form}
                 autoComplete="off"
-                onChange={debounce(handleChange)} // 通过函数防抖防止重复请求
+                style={{
+                    padding: '0 5px'
+                }}
             >
                 <Form.Item
                     label="账号"
-                    name="username"
+                    name="loginId"
                     rules={[
                         {
                             required: true,
@@ -45,22 +62,52 @@ function LoginFrom(props) {
                         },
                     ]}
                 >
-                    <Input />
+                    <Input value={userInfo.loginId} onChange={e => handleChangeInput('loginId', e.target.value)} />
                 </Form.Item>
+                {
+                    isLogin ? (
+                        <Form.Item
+                        label="密码"
+                        name="loginPwd"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入你的密码',
+                            },
+                        ]}
+                    >
+                        <Input.Password value={userInfo.loginPwd} onChange={e => handleChangeInput('loginPwd', e.target.value)}/>
+                    </Form.Item>
+                    ) : (
+                        <Form.Item
+                            label="用户名称"
+                            name="nickname"
+                        >
+                            <Input.Password value={userInfo.loginPwd} onChange={e => handleChangeInput('nickname', e.target.value)}/>
+                        </Form.Item>
+                    )
+                }
+
 
                 <Form.Item
-                    label="密码"
-                    name="password"
+                    name="captcha"
+                    label="验证码"
                     rules={[
                         {
                             required: true,
-                            message: '请输入你的密码',
+                            message: '请输入你的验证码',
                         },
                     ]}
                 >
-                    <Input.Password />
+                    <Row>
+                        <Col span={16}>
+                            <Input value={userInfo.captcha} onChange={e => handleChangeInput('captcha', e.target.value)}  />
+                        </Col>
+                        <Col span={6}>
+                            <div className='captcha-svg' dangerouslySetInnerHTML={{ __html: captchaSvg }} onClick={changeCaptchaSvg} />
+                        </Col>
+                    </Row>
                 </Form.Item>
-
                 <Form.Item
                     name="remember"
                     valuePropName="checked"
@@ -69,15 +116,24 @@ function LoginFrom(props) {
                         span: 16,
                     }}
                 >
-                    <Checkbox>记住我</Checkbox>
+                    <Checkbox onChange={e => handleChangeInput('remember', e.target.checked ? 7 : 0)} >记住我</Checkbox>
                 </Form.Item>
 
                 <Form.Item
+                    name="remember"
+                    valuePropName="checked"
                     wrapperCol={{
-                        offset: 8,
-                        span: 16,
+                        offset: 16,
                     }}
                 >
+                    <Row>
+                        <Col>
+                            <Button onClick={handleRL}>取消</Button>
+                        </Col>
+                        <Col offset={2}>
+                            <Button type="primary" onClick={handleSubmit} loading={isSubmit}>提交</Button>
+                        </Col>
+                    </Row>
                 </Form.Item>
             </Form>
         </>

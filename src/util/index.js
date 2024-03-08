@@ -1,3 +1,9 @@
+import submitAutoMessage from "./submitAutoMessage";
+
+
+/*
+* 函数防抖
+* */
 const debounce = (fn,time = 500) =>{
     let timeId = null;
     return (...arg) => {
@@ -6,6 +12,9 @@ const debounce = (fn,time = 500) =>{
     }
 }
 
+
+
 export {
-    debounce
+    debounce,
+    submitAutoMessage
 }
