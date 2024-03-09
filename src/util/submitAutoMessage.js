@@ -14,8 +14,8 @@ const submitAutoMessage = (fn, setLoading, successMsg, errorMsg, successCallback
     setLoading(true);
     return fn().then(resp => {
         setLoading(false);
-        message.success(successMsg || '请求成功');
-        successCallback();
+        successMsg && message.success(successMsg || '请求成功');
+        successCallback(resp);
     }).catch(error => {
         message.error( errorMsg || error.data.msg);
         errorCallback();

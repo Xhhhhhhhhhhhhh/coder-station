@@ -1,7 +1,6 @@
-import { Input, Form, Checkbox, Button, Row, Col } from "antd";
+import { Input, Form, Checkbox, Button, Row, Col, message } from "antd";
 import { useState } from "react";
 import { submitAutoMessage } from '../util'
-import { useImmer } from "use-immer";
 import { login, register } from "../api/userApi";
 import { useDispatch } from "react-redux";
 import { setInfo, setIsLogin } from "../store/userInfo";
@@ -9,7 +8,7 @@ import { setInfo, setIsLogin } from "../store/userInfo";
 function LoginFrom(props) {
     const { captchaSvg, changeCaptchaSvg, handleRL, isLogin } = props;
     const [form] = Form.useForm();
-    const [userInfo, setUserInfo] = useImmer({
+    const [userInfo, setUserInfo] = useState({
         loginId: '',
         loginPwd: '',
         remember: 7,
@@ -19,24 +18,52 @@ function LoginFrom(props) {
     const [isSubmit, setIsSubmit] = useState(false);
     const dispatch = useDispatch();
     const handleChangeInput = (key, payload) => {
-        setUserInfo(draft => {
-            draft[key] = payload
-        });
+        const obj = { ...userInfo };
+        obj[key] = payload;
+        setUserInfo(obj);
     }
-
-    const handleSubmit = () => {
-        const {loginId, nickname} = userInfo
-        submitAutoMessage(
-            isLogin ? login.bind(null, userInfo) : register.bind(null, userInfo) ,
-            setIsSubmit,
-            isLogin ? '登录成功' : '注册成功',
-            null,
-            () => {
-                dispatch(setInfo({loginId, nickname}));
-                dispatch(setIsLogin(true));
-                handleRL();
-            },
-            changeCaptchaSvg);
+    const handleSubmit = e => {
+        const {loginId, nickname} = userInfo;
+        form.validateFields({ // 验证表单校验是否通过
+            validateOnly: true
+        }).then(() => {
+            submitAutoMessage(
+                isLogin ? login.bind(null, userInfo) : register.bind(null, userInfo) ,
+                setIsSubmit,
+                null,
+                null,
+                (resp) => {
+                    if (!resp.data.data && isLogin) {
+                        message.error('账号或密码错误');
+                        changeCaptchaSvg();
+                    } else if (!resp.data.data.enabled) {
+                        message.warning('用户被冻结');
+                        changeCaptchaSvg();
+                    } else {
+                        message.success(isLogin ? '登录成功' : '注册成功');
+                        dispatch(setInfo({loginId, nickname}));
+                        dispatch(setIsLogin(true));
+                        isLogin && localStorage.setItem('token', resp.data.token);
+                        handleRL();
+                        // 请求成功时清空input中的值
+                        setUserInfo({
+                            loginId: '',
+                            loginPwd: '',
+                            remember: 7,
+                            captcha: '',
+                            nickname: ''
+                        });
+                        form.setFieldsValue({
+                            loginId: '',
+                            loginPwd: '',
+                            remember: 7,
+                            captcha: '',
+                            nickname: ''
+                        });
+                    }
+                },
+                changeCaptchaSvg);
+        }).catch(error => {})
     }
     return (
         <>
@@ -62,7 +89,7 @@ function LoginFrom(props) {
                         },
                     ]}
                 >
-                    <Input value={userInfo.loginId} onChange={e => handleChangeInput('loginId', e.target.value)} />
+                    <Input value={ userInfo.loginId } onChange={e => handleChangeInput('loginId', e.target.value)} />
                 </Form.Item>
                 {
                     isLogin ? (
@@ -83,7 +110,7 @@ function LoginFrom(props) {
                             label="用户名称"
                             name="nickname"
                         >
-                            <Input.Password value={userInfo.loginPwd} onChange={e => handleChangeInput('nickname', e.target.value)}/>
+                            <Input value={userInfo.nickname} onChange={e => handleChangeInput('nickname', e.target.value)}/>
                         </Form.Item>
                     )
                 }
@@ -131,7 +158,7 @@ function LoginFrom(props) {
                             <Button onClick={handleRL}>取消</Button>
                         </Col>
                         <Col offset={2}>
-                            <Button type="primary" onClick={handleSubmit} loading={isSubmit}>提交</Button>
+                            <Button type="primary" onClick={handleSubmit} loading={isSubmit} htmlType='submit' >提交</Button>
                         </Col>
                     </Row>
                 </Form.Item>

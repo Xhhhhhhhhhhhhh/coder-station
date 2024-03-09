@@ -5,6 +5,8 @@ import Model from "../components/Model";
 import LoginFrom from "./LoginFrom";
 import '../style/NavHeader.css'
 import { getCaptcha } from "../api/otherApi";
+import { useStore } from "react-redux";
+import UserInfo from "./UserInfo";
 
 const { Option } = Select;
 const { Search } = Input;
@@ -47,7 +49,7 @@ function NavHeader(props) {
     const [controller, setController] = useState(false)
     const [modelMap, setModelMap] = useState('登录');
     const [captchaSvg, setCaptchaSvg] = useState('');
-
+    const userInfo = useStore().getState().userInfo;
     useEffect(() => { // 监听location 实时改变选中样式
         setCurrent(location.pathname.replaceAll('/', ''));
     }, [location])
@@ -94,7 +96,7 @@ function NavHeader(props) {
                         enterButton="搜索"
                     />
                 </div>
-                <Model
+                { userInfo.isLogin ? <UserInfo avatar='/staticFile/avatar/looklook.png' userInfo={userInfo.info} /> : <Model
                     handel={() => (
                         <Button
                             type="primary"
@@ -102,7 +104,7 @@ function NavHeader(props) {
                         >
                             注册/登录
                         </Button>
-                        )
+                    )
                     }
                     controller={controller}
                     cancel={handleRL}
@@ -117,7 +119,7 @@ function NavHeader(props) {
                             isLogin={modelMap === '登录'}
                         />
                     </div>
-                </Model>
+                </Model> }
             </div>
         </>
     );
