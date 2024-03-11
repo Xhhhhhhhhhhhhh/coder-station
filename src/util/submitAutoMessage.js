@@ -10,16 +10,17 @@ import { message } from "antd";
 * successCallback: 成功时需要执行的回调函数
 * errorCallback: 失败需要执行的回调
 * */
-const submitAutoMessage = (fn, setLoading, successMsg, errorMsg, successCallback = () => {}, errorCallback = () => {}) => {
-    setLoading(true);
+const submitAutoMessage = (fn, setLoading = null, successMsg = null, errorMsg, successCallback = () => {}, errorCallback = () => {}) => {
+    setLoading && setLoading(true);
     return fn().then(resp => {
-        setLoading(false);
+        setLoading && setLoading(false);
         successMsg && message.success(successMsg || '请求成功');
         successCallback(resp);
     }).catch(error => {
+        console.log(error)
         message.error( errorMsg || error.data.msg);
         errorCallback();
-        setLoading(false);
+        setLoading && setLoading(false);
     });
 }
 

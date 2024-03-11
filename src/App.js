@@ -19,7 +19,7 @@ function App() {
         <Header>
             <NavHeader />
         </Header>
-        <Content>
+        <Content className='content'>
             <Routers />
         </Content>
         <Footer className='footer'>

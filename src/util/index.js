@@ -1,4 +1,5 @@
 import submitAutoMessage from "./submitAutoMessage";
+import formatDate from "./formatDate";
 
 
 /*
@@ -16,5 +17,6 @@ const debounce = (fn,time = 500) =>{
 
 export {
     debounce,
-    submitAutoMessage
+    submitAutoMessage,
+    formatDate
 }
