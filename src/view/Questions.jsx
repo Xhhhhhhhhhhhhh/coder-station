@@ -1,6 +1,7 @@
 import { Layout } from "antd";
 import QuestionsHeader from "../components/QuestionsHeader";
 import QuetionsContent from "../components/QuetionsContent";
+import QuestionsSider from "../components/QuestionsSider";
 const {
     Header,
     Content,
@@ -19,10 +20,14 @@ function Questions(props) {
             }}>
                 <QuestionsHeader />
             </Header>
-            <Content>
+            <Content style={{
+                display: 'flex',
+                padding: '0 60px',
+                columnGap: '30px'
+            }}>
                 <QuetionsContent></QuetionsContent>
-                <Sider>
-
+                <Sider width='300px'>
+                    <QuestionsSider></QuestionsSider>
                 </Sider>
             </Content>
         </>

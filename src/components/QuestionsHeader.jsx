@@ -29,7 +29,6 @@ function QuestionsHeader(props) {
                     ...item,
                     color: colorArr[index] ? colorArr[index] : null
                 }))
-                console.log(handleResp)
                 setTypeList(handleResp);
                 dispatch(setTypes(handleResp));
                 dispatch(setIsLoading(false))
