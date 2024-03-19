@@ -21,7 +21,25 @@ const register = data => request({
     data
 })
 
+/*
+* 恢复登录
+* */
+const whoAmI = () => request({
+    method: 'GET',
+    url: '/api/user/whoami'
+})
+
+/*
+* 通过id得到用户详细详细
+* */
+const getUserById = id => request({
+    method: 'GET',
+    url: `/api/user/${id}`
+})
+
 export {
     login,
-    register
+    register,
+    whoAmI,
+    getUserById
 }

@@ -3,6 +3,7 @@ import Books from "../view/Books";
 import InterviewQuestion from "../view/InterviewQuestion";
 import Questions from "../view/Questions";
 import Video from "../view/Video";
+import UserInfoDetails from "../view/UserInfoDetails";
 
 function Routers(props) {
     return (
@@ -12,6 +13,7 @@ function Routers(props) {
                 <Route path='/books' element={ <Books /> } />
                 <Route path='/interviewquestion' element={ <InterviewQuestion /> } />
                 <Route path='/video' element={ <Video /> } />
+                <Route path='/userInfoDetail' element={ <UserInfoDetails /> } />
                 <Route path='/' element={ <Navigate replace to='/questions' /> } />
             </Routes>
         </>

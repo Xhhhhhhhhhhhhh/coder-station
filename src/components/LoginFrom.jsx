@@ -41,7 +41,7 @@ function LoginFrom(props) {
                         changeCaptchaSvg();
                     } else {
                         message.success(isLogin ? '登录成功' : '注册成功');
-                        dispatch(setInfo({loginId, nickname}));
+                        dispatch(setInfo({loginId, nickname, id: resp.data.data._id}));
                         dispatch(setIsLogin(true));
                         isLogin && localStorage.setItem('token', resp.data.token);
                         handleRL();

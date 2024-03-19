@@ -11,7 +11,7 @@ request.interceptors.request.use(config => {
     // 如果有token就带过去
     const token = localStorage.getItem('token');
     if (token) {
-        config.headers['Authorization'] = 'Bearer' + token;
+        config.headers['Authorization'] = 'Bearer ' + token;
     }
     return config;
 }, error => {

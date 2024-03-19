@@ -2,6 +2,7 @@ import { Layout } from "antd";
 import QuestionsHeader from "../components/QuestionsHeader";
 import QuetionsContent from "../components/QuetionsContent";
 import QuestionsSider from "../components/QuestionsSider";
+import { useState } from "react";
 const {
     Header,
     Content,
@@ -11,6 +12,10 @@ const {
 
 
 function Questions(props) {
+    const [typeId, setTypeId] = useState('')
+    const handleClickTag = id => {
+        setTypeId(id);
+    }
     return (
         <>
             <Header style={{
@@ -18,14 +23,14 @@ function Questions(props) {
                 height: '100px',
                 padding: '20px 50px'
             }}>
-                <QuestionsHeader />
+                <QuestionsHeader handleClickTag={handleClickTag} />
             </Header>
             <Content style={{
                 display: 'flex',
                 padding: '0 60px',
                 columnGap: '30px'
             }}>
-                <QuetionsContent></QuetionsContent>
+                <QuetionsContent typeId={typeId}></QuetionsContent>
                 <Sider width='300px'>
                     <QuestionsSider></QuestionsSider>
                 </Sider>

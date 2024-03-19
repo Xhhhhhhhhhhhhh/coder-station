@@ -20,7 +20,8 @@ function QuestionsHeader(props) {
     const [isLoading, setSkeletonIsLoading] = useState(true)
     const colorArr = ["#108ee9", "#2db7f5", "#f50", "green", "#87d068", "blue", "red", "purple"];
     const dispatch = useDispatch();
-    const typeStore = useSelector(state => state.typeList)
+    const typeStore = useSelector(state => state.typeList);
+    const { handleClickTag } = props;
     useEffect(() => {
         if (typeStore.isLoading) {
             // 模拟一下请求接口的延迟
@@ -58,6 +59,13 @@ function QuestionsHeader(props) {
                 loading={isLoading}
             >
                 <Flex gap='4px 0' wrap='wrap'>
+                    <Tag
+                        style={{ borderRadius: '3px', cursor: 'pointer' }}
+                        color='#c41d7f'
+                        onClick={() => handleClickTag('')}
+                    >
+                        全部
+                    </Tag>
                     {
                         typeList.map(item => (
                             <Tag
@@ -65,6 +73,7 @@ function QuestionsHeader(props) {
                                 style={{ borderRadius: '3px', cursor: 'pointer' }}
                                 value={item._id}
                                 key={item._id}
+                                onClick={() => handleClickTag(item._id)}
                             >
                                 { item.typeName }
                             </Tag>

@@ -9,7 +9,7 @@ function InterviewQuestionContent(props) {
     const [isClick, setIsClick] = useState(false);
     const [interview, setInterview] = useState({})
     useEffect(() => {
-        submitAutoMessage(
+        interviewType.currentType && submitAutoMessage(
             getInterviewTitle.bind(null, interviewType.currentType),
             null,
             null,
@@ -26,7 +26,8 @@ function InterviewQuestionContent(props) {
     }, [interviewType.currentType]);
     return (
         <div style={{
-            flex: '1 0 auto'
+            flex: '1',
+            width: '100%'
         }}>
             {
                 isClick  ?

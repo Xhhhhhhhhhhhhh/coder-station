@@ -28,16 +28,24 @@ function QuetionsContent(props) {
         });
         setIsLoading(true);
     }
+    useEffect(() => {
+        setSorter({
+            ...sorter,
+            typeId: props.typeId
+        })
+    },[props.typeId])
+
 
     useEffect(() => {
-        // 获取问答列表
+        setIsLoading(true);
+        // 获取问答列表 模拟一下真实网络请求延迟
         setTimeout(() =>
             submitAutoMessage(getQuetions.bind(null, sorter), setIsLoading, null, null, resp => {
             setIssues(resp.data.data);
             setTotal(resp.data.count);
         }), 1000)
-
     }, [sorter]);
+
 
 
     return (

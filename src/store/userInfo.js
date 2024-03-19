@@ -5,7 +5,8 @@ export const userInfo = createSlice({
     initialState: {
         info: {
             loginId: '',
-            nickname: ''
+            nickname: '',
+            id: ''
         },
         isLogin: false
     },

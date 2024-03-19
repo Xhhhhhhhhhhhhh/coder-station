@@ -1,7 +1,8 @@
 import { Layout, FloatButton } from "antd";
-import InterviewQuestionHeader from "../components/InterviewQuestionHeader";
+import HeaderTitle from "../components/HeaderTitle";
 import InterviewQuestionSider from "../components/InterviewQuestionSider";
 import InterviewQuestionContent from "../components/InterviewQuestionContent";
+import '../style/InterviewQuestion.css'
 
 
 const {
@@ -9,6 +10,9 @@ const {
     Content,
     Sider
 } = Layout;
+
+
+
 
 function InterviewQuestion(props) {
     return (
@@ -18,14 +22,14 @@ function InterviewQuestion(props) {
                 height: '100px',
                 padding: '20px 50px'
             }}>
-                <InterviewQuestionHeader></InterviewQuestionHeader>
+                <HeaderTitle title='面试题大全'></HeaderTitle>
             </Header>
             <Content style={{
                 display: 'flex',
                 padding: '0 10px',
                 columnGap: '30px'
             }}>
-                <Sider width='230px'>
+                <Sider width='230px' >
                     <InterviewQuestionSider></InterviewQuestionSider>
                 </Sider>
                 <InterviewQuestionContent></InterviewQuestionContent>

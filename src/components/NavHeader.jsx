@@ -5,7 +5,7 @@ import Model from "../components/Model";
 import LoginFrom from "./LoginFrom";
 import '../style/NavHeader.css'
 import { getCaptcha } from "../api/otherApi";
-import { useStore } from "react-redux";
+import { useSelector, useStore } from "react-redux";
 import UserInfo from "./UserInfo";
 
 const { Option } = Select;
@@ -49,7 +49,7 @@ function NavHeader(props) {
     const [controller, setController] = useState(false)
     const [modelMap, setModelMap] = useState('登录');
     const [captchaSvg, setCaptchaSvg] = useState('');
-    const userInfo = useStore().getState().userInfo;
+    const userInfo = useSelector(state => state.userInfo);
     useEffect(() => { // 监听location 实时改变选中样式
         setCurrent(location.pathname.replaceAll('/', ''));
     }, [location])
@@ -96,30 +96,38 @@ function NavHeader(props) {
                         enterButton="搜索"
                     />
                 </div>
-                { userInfo.isLogin ? <UserInfo avatar='/staticFile/avatar/looklook.png' userInfo={userInfo.info} /> : <Model
-                    handel={() => (
-                        <Button
-                            type="primary"
-                            onClick={handleRL}
-                        >
-                            注册/登录
-                        </Button>
-                    )
-                    }
-                    controller={controller}
-                    cancel={handleRL}
-                >
-                    <div className='model-form'>
-                        {/* 这个组件的事件参数是直接返回value */}
-                        <Segmented options={ ['登录', '注册'] } block value={ modelMap } onChange={ setModelMap } size='large' />
-                        <LoginFrom
-                            captchaSvg={ captchaSvg }
-                            changeCaptchaSvg={ captcha }
-                            handleRL={handleRL}
-                            isLogin={modelMap === '登录'}
+                    {
+                        userInfo.isLogin ?
+                        <UserInfo
+                            avatar='/staticFile/avatar/looklook.png'
+                            userInfo={userInfo.info}
                         />
-                    </div>
-                </Model> }
+                        :
+                        <Model
+                        handel={() => (
+                            <Button
+                                type="primary"
+                                onClick={handleRL}
+                            >
+                                注册/登录
+                            </Button>
+                            )
+                        }
+                            controller={controller}
+                            cancel={handleRL}
+                        >
+                            <div className='model-form'>
+                                {/* 这个组件的事件参数是直接返回value */}
+                                <Segmented options={ ['登录', '注册'] } block value={ modelMap } onChange={ setModelMap } size='large' />
+                                <LoginFrom
+                                    captchaSvg={ captchaSvg }
+                                    changeCaptchaSvg={ captcha }
+                                    handleRL={handleRL}
+                                    isLogin={modelMap === '登录'}
+                                />
+                            </div>
+                        </Model>
+                    }
             </div>
         </>
     );

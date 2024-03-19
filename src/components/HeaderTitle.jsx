@@ -12,12 +12,13 @@ const divStyle = {
 
 
 
-function InterviewQuestionHeader(props) {
+function HeaderTitle(props) {
+    const { title } = props
     return (
         <div style={divStyle}>
-            面试题大全
+            { title }
         </div>
     );
 }
 
-export default InterviewQuestionHeader;
+export default HeaderTitle;
