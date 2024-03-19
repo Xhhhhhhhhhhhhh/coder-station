@@ -7,7 +7,15 @@ const getQuetions = (data) => {
         params: data
     })
 }
+/*
+* 通过id获取问题详情
+* */
+const getQuestionById = id => request({
+    method: 'GET',
+    url: `/api/issue/${id}`
+})
 
 export {
-    getQuetions
+    getQuetions,
+    getQuestionById
 }

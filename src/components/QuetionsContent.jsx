@@ -4,6 +4,7 @@ import style from '../style/typelist.module.css'
 import { useEffect, useState } from "react";
 import { List, Tag, Skeleton } from "antd";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -15,6 +16,7 @@ function QuetionsContent(props) {
         current: 1,
         pageSize: 5,
     });
+    const navigate = useNavigate();
     const [total, setTotal] = useState(0)
     // 找到对应的类型数据
     const findType = id => {
@@ -45,7 +47,9 @@ function QuetionsContent(props) {
             setTotal(resp.data.count);
         }), 1000)
     }, [sorter]);
-
+    const handleGoToDetail = id => {
+        navigate(`/questionDetail/${id}`)
+    }
 
 
     return (
@@ -69,7 +73,7 @@ function QuetionsContent(props) {
                         onChange: handleChangePage
                     }}
                     renderItem={item => (
-                        <List.Item className={style.item} style={{ padding: '12px 30px', justifyContent: 'flex-start' }} >
+                        <List.Item className={style.item} style={{ padding: '12px 30px', justifyContent: 'flex-start' }} onClick={ () => handleGoToDetail(item._id) } >
                             <div className={style['left-item']}>
                                 <div>
                             <span>
